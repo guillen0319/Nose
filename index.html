@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Diez cartas de amor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Caveat:wght@400;600&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #e9e6f5;
+  --bg-2: #dcd8ee;
+  --ink: #1b2559;
+  --ink-soft: #4a5385;
+  --paper: #fbfaff;
+  --paper-line: #d9d6ec;
+  --red: #d63d3a;
+  --blue: #2f58d0;
+  --env: #f6f4fd;
+  --shadow: rgba(27, 37, 89, .22);
+  --serif: "Young Serif", Georgia, "Times New Roman", serif;
+  --hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
+  --sans: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12163a; --bg-2: #1a2050; --ink: #eceaff; --ink-soft: #a9aedb;
+    --paper: #f2f0fb; --paper-line: #cfcbe6; --env: #262c66; --shadow: rgba(0,0,0,.5);
+    --red: #ef5b57; --blue: #6f8dff;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12163a; --bg-2: #1a2050; --ink: #eceaff; --ink-soft: #a9aedb;
+  --paper: #f2f0fb; --paper-line: #cfcbe6; --env: #262c66; --shadow: rgba(0,0,0,.5);
+  --red: #ef5b57; --blue: #6f8dff;
+}
+* { box-sizing: border-box; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--sans); line-height: 1.5;
+  min-height: 100%;
+}
+.airmail {
+  height: 12px;
+  background: repeating-linear-gradient(-45deg, var(--red) 0 22px, var(--bg) 22px 34px, var(--blue) 34px 56px, var(--bg) 56px 68px);
+}
+header { max-width: 760px; margin: 0 auto; padding: 56px 24px 24px; }
+h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.4rem, 8vw, 4.4rem); line-height: 1.02; margin: 0 0 16px; letter-spacing: -.01em; }
+header p { max-width: 52ch; color: var(--ink-soft); font-size: 1.05rem; margin: 0; }
+
+.names { max-width: 760px; margin: 0 auto; padding: 8px 24px 8px; display: flex; flex-wrap: wrap; gap: 14px; }
+.names label { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; color: var(--ink-soft); flex: 1 1 200px; }
+.names input {
+  font: inherit; font-size: 1rem; color: var(--ink); background: var(--bg-2);
+  border: 2px solid transparent; border-radius: 10px; padding: 10px 12px;
+}
+.names input:focus { outline: none; border-color: var(--blue); }
+
+main { max-width: 1040px; margin: 0 auto; padding: 24px 24px 72px; }
+.grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 28px 24px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.grid li:nth-child(odd) .envelope { transform: rotate(-1.2deg); }
+.grid li:nth-child(even) .envelope { transform: rotate(1deg); }
+
+.envelope {
+  position: relative; display: block; width: 100%; text-align: left; cursor: pointer;
+  aspect-ratio: 16 / 10.5; border: 0; padding: 18px 20px;
+  background: var(--env); color: var(--ink); font: inherit;
+  border-radius: 4px; box-shadow: 0 10px 22px -10px var(--shadow);
+  transition: transform .25s ease, box-shadow .25s ease;
+  overflow: hidden;
+}
+.envelope::before { /* airmail border */
+  content: ""; position: absolute; inset: 0; border-radius: 4px; padding: 7px;
+  background: repeating-linear-gradient(-45deg, var(--red) 0 14px, transparent 14px 22px, var(--blue) 22px 36px, transparent 36px 44px);
+  -webkit-mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+.envelope::after { /* flap */
+  content: ""; position: absolute; left: 7px; right: 7px; top: 7px; height: 46%;
+  background: color-mix(in srgb, var(--env) 88%, var(--ink) 12%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  opacity: .9; transition: transform .35s ease; transform-origin: top center;
+}
+.envelope:hover, .envelope:focus-visible { transform: translateY(-4px) rotate(0deg) !important; box-shadow: 0 18px 28px -12px var(--shadow); }
+.envelope:hover::after, .envelope:focus-visible::after { transform: rotateX(160deg); }
+.envelope:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.env-body { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; }
+.env-title { font-family: var(--hand); font-size: 1.7rem; line-height: 1.05; font-weight: 600; }
+.env-to { font-size: .85rem; color: var(--ink-soft); margin-top: 4px; }
+.stamp {
+  position: absolute; z-index: 1; top: 16px; right: 18px; width: 38px; height: 46px;
+  background: var(--paper); border: 2px dashed var(--red); border-radius: 2px;
+  display: grid; place-items: center; color: var(--red); font-size: 1.2rem;
+}
+.opened .stamp { background: var(--red); color: var(--paper); border-style: solid; }
+
+dialog {
+  border: 0; padding: 0; background: transparent; color: #1b2559;
+  width: min(640px, 100% - 24px); max-height: 92dvh; overflow: visible;
+}
+dialog::backdrop { background: rgba(14, 18, 50, .72); }
+dialog[open] { animation: unfold .45s cubic-bezier(.2,.8,.2,1); }
+@keyframes unfold { from { opacity: 0; transform: translateY(24px) scale(.96); } to { opacity: 1; transform: none; } }
+.sheet {
+  background: var(--paper); border-radius: 4px; padding: 40px 36px 28px;
+  max-height: 92dvh; overflow-y: auto; position: relative;
+  background-image: repeating-linear-gradient(transparent 0 35px, var(--paper-line) 35px 36px);
+  background-position: 0 44px; box-shadow: 0 30px 60px -20px rgba(0,0,0,.6);
+  border-top: 12px solid transparent;
+  border-image: repeating-linear-gradient(-45deg, #d63d3a 0 14px, #fbfaff 14px 22px, #2f58d0 22px 36px, #fbfaff 36px 44px) 12;
+}
+.sheet h2 { font-family: var(--serif); font-weight: 400; font-size: 1.5rem; margin: 0 0 18px; line-height: 1.15; color: #1b2559; background: #fbfaff; display: inline; box-shadow: 0 0 0 6px #fbfaff; }
+.letter { font-family: var(--hand); font-size: 1.6rem; line-height: 36px; margin: 22px 0 0; color: #1b2559; }
+.letter p { margin: 0 0 36px; }
+.letter .sign { margin-bottom: 0; white-space: pre-line; }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 26px; font-family: var(--sans); }
+.bar button {
+  font: inherit; font-size: .95rem; font-weight: 500; cursor: pointer; color: #1b2559;
+  background: #e9e6f5; border: 0; border-radius: 999px; padding: 10px 18px; min-height: 44px;
+}
+.bar button:hover { background: #dcd8ee; }
+.bar button:focus-visible, .close:focus-visible { outline: 3px solid #2f58d0; outline-offset: 2px; }
+.bar button:disabled { opacity: .4; cursor: default; }
+.bar .count { font-size: .85rem; color: #4a5385; }
+.close {
+  position: absolute; top: 22px; right: 14px; width: 44px; height: 44px; border-radius: 50%; border: 0;
+  background: #fbfaff; color: #1b2559; font-size: 1.4rem; cursor: pointer;
+}
+
+.photo { margin: 20px auto 8px; width: min(78%, 300px); background: #fff; padding: 10px 10px 14px; box-shadow: 0 8px 18px -8px rgba(27,37,89,.45); transform: rotate(-1.6deg); position: relative; }
+.photo::before { content: ""; position: absolute; top: -12px; left: 50%; width: 84px; height: 24px; transform: translateX(-50%) rotate(2deg); background: rgba(214,61,58,.35); }
+.photo img { display: block; width: 100%; height: auto; max-height: 46dvh; object-fit: cover; }
+footer { text-align: center; padding: 8px 24px 40px; color: var(--ink-soft); font-size: .9rem; }
+
+@media (max-width: 520px) {
+  .sheet { padding: 32px 22px 22px; }
+  .letter { font-size: 1.45rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+body.locked { overflow: hidden; }
+body.locked header, body.locked main, body.locked footer { visibility: hidden; }
+.intro {
+  position: fixed; inset: 0; z-index: 100; background: var(--bg);
+  display: flex; flex-direction: column; justify-content: space-between;
+  transition: opacity .8s ease, visibility .8s ease;
+}
+.intro.gone { opacity: 0; visibility: hidden; pointer-events: none; }
+.intro .airmail { flex: none; }
+.intro-center {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px; text-align: center; gap: 36px;
+  padding-top: calc(24px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+}
+.intro-phrase { font-family: var(--serif); font-size: clamp(1.9rem, 7.2vw, 3.6rem); line-height: 1.12; max-width: 17em; margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+.intro-phrase span { display: block; opacity: 0; animation: rise 1.1s ease forwards; }
+.intro-phrase span:nth-child(2) { animation-delay: 1.4s; }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.intro-btn {
+  font: inherit; font-weight: 600; font-size: 1.05rem; cursor: pointer; color: #fff;
+  background: var(--blue); border: 0; border-radius: 999px; padding: 14px 30px; min-height: 48px;
+  opacity: 0; animation: rise .9s ease 2.8s forwards;
+}
+.intro-btn:hover { filter: brightness(1.1); }
+.intro-btn:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+.music {
+  position: fixed; z-index: 20; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  width: 48px; height: 48px; border-radius: 50%; border: 0; cursor: pointer;
+  background: var(--ink); color: var(--bg); font-size: 1.2rem; box-shadow: 0 8px 18px -6px var(--shadow);
+}
+.music:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .intro-phrase span, .intro-btn { opacity: 1; animation: none; }
+}
+</style>
+</head>
+<body class="locked">
+<div class="intro" id="intro" role="dialog" aria-label="Bienvenida">
+  <div class="airmail" aria-hidden="true"></div>
+  <div class="intro-center">
+    <p class="intro-phrase"><span>No sé por qué me gustas,</span><span>pero te doy 10 razones de miles.</span></p>
+    <button class="intro-btn" id="enter">Ver las cartas</button>
+  </div>
+  <div class="airmail" aria-hidden="true"></div>
+</div>
+<button class="music" id="music" aria-label="Silenciar música" hidden>♪</button>
+<audio id="song" loop preload="auto" src="assets/cancion.mp3"></audio>
+
+<div class="airmail" aria-hidden="true"></div>
+
+<header>
+  <h1>Diez razones de miles</h1>
+  <p>Cada sobre guarda una carta para un momento distinto. Ábrelas en orden o elige la que necesites hoy.</p>
+</header>
+
+<main>
+  <ol class="grid" id="grid"></ol>
+</main>
+
+<footer>Hechas para leerse despacio.</footer>
+
+<dialog id="dlg" aria-labelledby="dlg-title">
+  <div class="sheet">
+    <button class="close" id="close" aria-label="Cerrar carta">✕</button>
+    <h2 id="dlg-title"></h2>
+    <div class="letter" id="letter"></div>
+    <div class="bar">
+      <button id="prev">Anterior</button>
+      <span class="count" id="count"></span>
+      <button id="next">Siguiente</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+const LETTERS = [
+  { t: "Cuando te vi por primera vez",
+    p: ["Todavía recuerdo dónde estaba parado cuando apareciste. No pasó nada extraordinario: alguien dijo algo, tú te reíste, y yo dejé de escuchar lo demás.",
+        "Ese día no supe que estaba empezando algo. Solo sé que volví a casa con la sensación de haber visto una puerta abierta, y que desde entonces no he querido cerrarla.",
+        "Si pudiera regresar a ese momento, no cambiaría nada. Solo me acercaría un poco más rápido."] },
+  { t: "Buenos días",
+    p: ["Hoy desperté pensando en ti, como casi todos los días. No es un pensamiento largo. Es más bien una calma que llega antes que el resto de las ideas.",
+        "Quería que lo primero que leyeras fuera esto: que tu día importa, que ojalá sea amable contigo, y que en algún punto de la tarde, cuando te canses, recuerdes que hay alguien que se alegra de que existas.",
+        "Toma agua, come algo rico y no olvides sonreír por lo menos una vez. Yo mientras tanto te llevo conmigo."] },
+  { t: "Lo que más me gusta de ti",
+    p: ["Me gusta cómo te ríes cuando algo te da pena. Me gusta que te emociones con cosas pequeñas y que defiendas lo que quieres sin hacer ruido.",
+        "Me gusta cómo escuchas, con la atención entera, como si lo que uno dice mereciera cuidado. Me gusta tu manera de decir mi nombre.",
+        "Podría seguir con la lista, pero terminaría escribiéndote un libro. Basta decir que cada cosa tuya, incluso las que tú crees defectos, me parece parte de lo que te hace tú."] },
+  { t: "Cuando estamos lejos",
+    p: ["La distancia se siente en los detalles: en el lado de la mesa donde nadie se sienta, en las noticias que uno quiere contar y tiene que guardar hasta la llamada.",
+        "Pero también he descubierto algo. Extrañarte me recuerda lo mucho que tengo. Nadie extraña así a quien no quiere de verdad.",
+        "Cuéntame todo cuando hablemos, hasta lo aburrido. Y mientras llega el día del abrazo, quiero que sepas que sigues aquí conmigo, en cada plan que hago pensando en ti."] },
+  { t: "Perdóname",
+    p: ["Escribo esto porque a veces las palabras dichas en voz alta salen torcidas. Me equivoqué, y lo sé. No busco excusas ni quiero que esto se resuelva rápido para que la incomodidad pase.",
+        "Quiero entender qué te hice sentir y aprender a que no se repita. Tú mereces a alguien que escuche antes de defenderse.",
+        "No te pido que olvides. Te pido una oportunidad para demostrarte, con hechos y con paciencia, que puedo hacerlo mejor. Lo que siento por ti no está en duda. Lo que quiero es cuidarlo."] },
+  { t: "Gracias",
+    p: ["Gracias por quedarte en los días en que yo no era buena compañía. Gracias por las veces que preguntaste qué me pasaba y esperaste la respuesta de verdad.",
+        "Gracias por celebrar mis logros como si fueran tuyos y por no dejar que me rindiera cuando quise hacerlo.",
+        "Contigo aprendí que el amor también es algo práctico: es un mensaje a tiempo, una mano en la espalda, un «yo me encargo». Ojalá algún día pueda devolverte, aunque sea una parte, de lo que me has dado."] },
+  { t: "Las cosas de todos los días",
+    p: ["Lo que más quiero de esta vida no son los grandes planes. Es el café que preparas sin preguntar cómo lo tomo, la canción que ponemos mientras cocinamos, el silencio cómodo en el carro.",
+        "Los viajes serán inolvidables, claro, pero lo cotidiano es donde de verdad vivimos. Y en lo cotidiano contigo me siento en casa.",
+        "Si algún día me preguntan qué es la felicidad, voy a describir una tarde cualquiera, contigo al lado, sin nada urgente por hacer."] },
+  { t: "Para cuando dudes de ti",
+    p: ["Hay días en que te miras al espejo y no ves lo que yo veo. Quiero prestarte mis ojos un momento.",
+        "Veo a alguien que se esfuerza más de lo que reconoce, que ha superado cosas que nadie sabe y que sigue siendo amable a pesar de todo. Veo a alguien valiente, aunque no se sienta así.",
+        "Cuando la voz de adentro se ponga dura, recuerda esta carta. No tienes que ser perfecto para ser querido. Ya eres suficiente, y yo estoy de tu lado, siempre."] },
+  { t: "Lo que te prometo",
+    p: ["Te prometo decirte la verdad, incluso cuando sea incómoda. Te prometo escucharte hasta el final antes de responder.",
+        "Te prometo que voy a reírme de nosotros mismos, pedir perdón a tiempo y no dejar que el orgullo gane sobre el cariño.",
+        "Te prometo apoyar tus sueños como si fueran míos, y darte espacio cuando lo necesites sin que eso signifique que me voy. No sé cómo será el futuro, pero sí sé cómo quiero recorrerlo: a tu lado y con la puerta siempre abierta."] },
+  { t: "Lo que viene",
+    p: ["No sé qué nos espera, y me gusta así. Sé que habrá días fáciles y otros pesados, y que en todos prefiero tu compañía a cualquier otra.",
+        "Quiero envejecer contigo. Quiero que nos toque contar historias de esta época y discutir sobre cuál es la versión correcta. Quiero que sigamos descubriéndonos, incluso cuando creamos que ya lo sabemos todo.",
+        "Esta es la última carta del sobre, pero no de la historia. Guarda un espacio para las próximas, porque nos quedan muchas por escribir."] }
+];
+
+const PHOTOS = [
+  "assets/foto1.jpg",
+  "assets/foto2.jpg",
+  "assets/foto3.jpg",
+  "assets/foto4.jpg",
+  "assets/foto5.jpg"
+];
+// carta (0-based) -> índice de foto
+const PHOTO_FOR = {0:0, 2:3, 4:1, 5:2, 6:4, 8:0};
+
+const grid = document.getElementById('grid');
+const dlg = document.getElementById('dlg');
+const opened = new Set();
+let current = 0;
+
+const para = () => 'mi niña';
+const de = () => 'Quien te ama';
+const esc = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function renderGrid() {
+  grid.innerHTML = '';
+  LETTERS.forEach((l, i) => {
+    const li = document.createElement('li');
+    const b = document.createElement('button');
+    b.className = 'envelope' + (opened.has(i) ? ' opened' : '');
+    b.setAttribute('aria-label', 'Abrir carta: ' + l.t);
+    b.innerHTML = `<span class="stamp" aria-hidden="true">♥</span>
+      <span class="env-body">
+        <span class="env-title">${esc(l.t)}</span>
+        <span class="env-to">Para ${esc(para())}</span>
+      </span>`;
+    b.addEventListener('click', () => openLetter(i));
+    li.appendChild(b);
+    grid.appendChild(li);
+  });
+}
+
+function showLetter(i) {
+  current = i;
+  opened.add(i);
+  const l = LETTERS[i];
+  document.getElementById('dlg-title').textContent = l.t;
+  document.getElementById('letter').innerHTML =
+    (PHOTO_FOR[i] !== undefined ? `<figure class="photo" style="margin-left:auto;margin-right:auto"><img src="${PHOTOS[PHOTO_FOR[i]]}" alt="Foto de nosotros"></figure>` : '') +
+    `<p>Mi niña,</p>` +
+    l.p.map(x => `<p>${esc(x)}</p>`).join('') +
+    `<p class="sign">Con todo mi cariño,\n${esc(de())}</p>`;
+  document.getElementById('count').textContent = `Carta ${i + 1} de ${LETTERS.length}`;
+  document.getElementById('prev').disabled = i === 0;
+  document.getElementById('next').disabled = i === LETTERS.length - 1;
+  dlg.querySelector('.sheet').scrollTop = 0;
+}
+function openLetter(i) { showLetter(i); if (!dlg.open) dlg.showModal(); }
+
+document.getElementById('prev').addEventListener('click', () => showLetter(current - 1));
+document.getElementById('next').addEventListener('click', () => showLetter(current + 1));
+document.getElementById('close').addEventListener('click', () => dlg.close());
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+dlg.addEventListener('close', renderGrid);
+document.addEventListener('keydown', e => {
+  if (!dlg.open) return;
+  if (e.key === 'ArrowRight' && current < LETTERS.length - 1) showLetter(current + 1);
+  if (e.key === 'ArrowLeft' && current > 0) showLetter(current - 1);
+});
+
+renderGrid();
+
+const intro = document.getElementById('intro');
+const song = document.getElementById('song');
+const musicBtn = document.getElementById('music');
+let muted = false;
+document.getElementById('enter').addEventListener('click', () => {
+  document.body.classList.remove('locked');
+  intro.classList.add('gone');
+  song.volume = 0.6;
+  song.play().catch(() => {});
+  musicBtn.hidden = false;
+});
+musicBtn.addEventListener('click', () => {
+  muted = !muted;
+  song.muted = muted;
+  musicBtn.textContent = muted ? '✕' : '♪';
+  musicBtn.setAttribute('aria-label', muted ? 'Activar música' : 'Silenciar música');
+});
+</script>
+</body>
+</html>
