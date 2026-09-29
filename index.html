@@ -181,6 +181,9 @@ body.locked header, body.locked main, body.locked footer { visibility: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .intro-phrase span, .intro-btn { opacity: 1; animation: none; }
 }
+.toast { position: fixed; z-index: 21; left: 16px; right: 76px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); margin: 0; padding: 12px 14px; border-radius: 12px; background: var(--ink); color: var(--bg); font-size: .9rem; }
+.toast[hidden] { display: none; }
+.music[hidden] { display: none; }
 </style>
 </head>
 <body class="locked">
@@ -193,6 +196,7 @@ body.locked header, body.locked main, body.locked footer { visibility: hidden; }
   <div class="airmail" aria-hidden="true"></div>
 </div>
 <button class="music" id="music" aria-label="Silenciar música" hidden>♪</button>
+<p class="toast" id="toast" role="status" hidden></p>
 <audio id="song" loop preload="auto" src="assets/cancion.mp3"></audio>
 
 <div class="airmail" aria-hidden="true"></div>
@@ -335,19 +339,34 @@ renderGrid();
 const intro = document.getElementById('intro');
 const song = document.getElementById('song');
 const musicBtn = document.getElementById('music');
-let muted = false;
+const toast = document.getElementById('toast');
+function showToast(t) { toast.textContent = t; toast.hidden = false; }
+function setIcon() {
+  const playing = !song.paused;
+  musicBtn.textContent = playing ? '♪' : '▶';
+  musicBtn.setAttribute('aria-label', playing ? 'Pausar música' : 'Reproducir música');
+}
+function startMusic() {
+  song.muted = false;
+  song.volume = 0.6;
+  const p = song.play();
+  if (p && p.catch) p.catch(() => { setIcon(); showToast('Toca el botón ▶ para activar la música.'); });
+}
+song.addEventListener('play', setIcon);
+song.addEventListener('pause', setIcon);
+song.addEventListener('error', () => {
+  musicBtn.hidden = false;
+  showToast('No se pudo cargar la música. Revisa que la carpeta assets esté subida junto a index.html.');
+});
 document.getElementById('enter').addEventListener('click', () => {
   document.body.classList.remove('locked');
   intro.classList.add('gone');
-  song.volume = 0.6;
-  song.play().catch(() => {});
   musicBtn.hidden = false;
+  startMusic();
 });
 musicBtn.addEventListener('click', () => {
-  muted = !muted;
-  song.muted = muted;
-  musicBtn.textContent = muted ? '✕' : '♪';
-  musicBtn.setAttribute('aria-label', muted ? 'Activar música' : 'Silenciar música');
+  toast.hidden = true;
+  if (song.paused) startMusic(); else song.pause();
 });
 </script>
 </body>
